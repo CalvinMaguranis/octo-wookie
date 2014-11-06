@@ -1,6 +1,8 @@
 #include <iostream>
 #include <SDL.h>
 
+#include <string>
+
 // globals
 const int __SDL_RENDERER_USE_HW_DRIVERS = -1;
 SDL_Window *win;
@@ -8,6 +10,7 @@ SDL_Renderer *ren;
 SDL_Texture *tex;
 
 // forward declarations
+std::string get_res_path(const std::string &path="");
 bool init(const char * label, int width, int height);
 
 int main(int argc, char** argv)
@@ -26,14 +29,14 @@ int main(int argc, char** argv)
         SDL_DestroyWindow(win);
         SDL_Quit();
     }
-	return 0;
+    return 0;
 }
 
 // sets up window and default renderer
 bool init(const char * label, int width, int height)
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
-		std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+        std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
         return false;
     }
 
@@ -55,8 +58,10 @@ bool init(const char * label, int width, int height)
         return false;
     }
 
-    SDL_Surface *bg = SDL_LoadBMP("../res/simpsons.bmp");
-    if (bg == nullptr){
+    std::string res = "../res/simpsons.bmp";
+    std::string res_path = get_res_path(res);
+    SDL_Surface *bg = SDL_LoadBMP(res_path.c_str());
+    if (bg == nullptr) {
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
         std::cout << "SDL_LoadBMP Error: " << SDL_GetError() << std::endl;
@@ -66,7 +71,7 @@ bool init(const char * label, int width, int height)
 
     tex = SDL_CreateTextureFromSurface(ren, bg);
     SDL_FreeSurface(bg);
-    if (tex == nullptr){
+    if (tex == nullptr) {
         SDL_DestroyRenderer(ren);
         SDL_DestroyWindow(win);
         std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
@@ -77,5 +82,21 @@ bool init(const char * label, int width, int height)
     return true;
 }
 
-
-
+#ifdef _WIN32
+    const char PATH_SEP = '\\';
+#else
+    const char PATH_SEP = '/';
+#endif
+std::string get_res_path(const std::string &path)
+{
+    std::string base_path;
+    const char *base = SDL_GetBasePath();
+    if (base == nullptr) {
+        // something went wrong
+        std::cout << "SDL_GetBasePath error: " << SDL_GetError() << std::endl;
+        return "";
+    } else {
+        base_path = base;
+    }
+    return base_path + path;
+}
