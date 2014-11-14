@@ -23,7 +23,11 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(include)
 
+# SDL2_image
+find_package(SDL2_IMAGE REQUIRED)
+include_directories(${SDL2_IMAGE_INCLUDE_DIR})
+
 # Setup actual executable
 add_executable(${PROJECT_NAME}  main.cpp)
-target_link_libraries(${PROJECT_NAME}  ${SDL2_LIBRARY})
+target_link_libraries(${PROJECT_NAME}  ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY})
 install(TARGETS ${PROJECT_NAME}  RUNTIME DESTINATION ${BIN_DIR})

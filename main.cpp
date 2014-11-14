@@ -1,7 +1,9 @@
 #include <iostream>
+#include <string>
+
 #include <SDL.h>
 
-#include <string>
+#include "cleanup.h"
 
 // globals
 const int __SDL_RENDERER_USE_HW_DRIVERS = -1;
@@ -43,7 +45,7 @@ bool init(const char * label, int width, int height)
     win = SDL_CreateWindow(label, 50, 50, width, height, SDL_WINDOW_SHOWN);
     if (win == nullptr) {
         std::cout << "SDL_CreateWindow error: " << SDL_GetError() << std::endl;
-        SDL_DestroyWindow(win);
+        cleanup(win);
         SDL_Quit();
         return false;
     }
@@ -52,8 +54,7 @@ bool init(const char * label, int width, int height)
             SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (ren == nullptr) {
         std::cout << "SDL_CreateRenderer error: " << SDL_GetError() << std::endl;
-        SDL_DestroyWindow(win);
-        SDL_DestroyRenderer(ren);
+        cleanup(ren, win);
         SDL_Quit();
         return false;
     }
@@ -62,8 +63,7 @@ bool init(const char * label, int width, int height)
     std::string res_path = get_res_path(res);
     SDL_Surface *bg = SDL_LoadBMP(res_path.c_str());
     if (bg == nullptr) {
-        SDL_DestroyRenderer(ren);
-        SDL_DestroyWindow(win);
+        cleanup(ren, win);
         std::cout << "SDL_LoadBMP Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
         return false;
@@ -72,8 +72,7 @@ bool init(const char * label, int width, int height)
     tex = SDL_CreateTextureFromSurface(ren, bg);
     SDL_FreeSurface(bg);
     if (tex == nullptr) {
-        SDL_DestroyRenderer(ren);
-        SDL_DestroyWindow(win);
+        cleanup(ren, win);
         std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
         return false;
