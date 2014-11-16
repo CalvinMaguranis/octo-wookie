@@ -4,6 +4,7 @@
 #include <SDL.h>
 
 #include "cleanup.h"
+#include "cross_platform.h"
 
 // globals
 const int __SDL_RENDERER_USE_HW_DRIVERS = -1;
@@ -31,6 +32,7 @@ int main(int argc, char** argv)
         SDL_DestroyWindow(win);
         SDL_Quit();
     }
+
     return 0;
 }
 
@@ -81,11 +83,6 @@ bool init(const char * label, int width, int height)
     return true;
 }
 
-#ifdef _WIN32
-    const char PATH_SEP = '\\';
-#else
-    const char PATH_SEP = '/';
-#endif
 std::string get_res_path(const std::string &path)
 {
     std::string base_path;

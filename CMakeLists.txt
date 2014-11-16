@@ -28,7 +28,7 @@ include_directories(include)
 # include_directories(${SDL2_IMAGE_INCLUDE_DIR})
 
 # Setup actual executable
-add_executable(${PROJECT_NAME}  main.cpp cross_platform.cpp)
+add_executable(${PROJECT_NAME}  main.cpp)
 
 target_link_libraries(${PROJECT_NAME}  ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY})
 #target_link_libraries(${PROJECT_NAME}  ${SDL2_LIBRARY})
