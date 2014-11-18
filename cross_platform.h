@@ -23,6 +23,14 @@
 
 // conversion functions adapted from: http://www.nubaria.com/en/blog/?p=289
 // NOTE: these are intended to be std::strings! (std::string-> UTF-8; std::string16->UTF-16)
+std::string to_utf8(std::u16string utf16str) {
+	return std::wstring_convert<std::codecvt_utf8_utf16 <char16_t>, char16_t>().to_bytes(utf16str);
+}
+
+std::u16string to_utf16(std::string utf8str) {
+	return std::wstring_convert<std::codecvt_utf8_utf16 <char16_t>, char16_t>().from_bytes(utf8str);
+}
+
 #define UTF16_TO_UTF8(utf16str) \
 	std::wstring_convert<std::codecvt_utf8_utf16 <char16_t>, char16_t>().to_bytes(utf16str)
 
@@ -49,7 +57,7 @@
 	
 #endif // __UTF8_TEST
 
-#endif defined(_WIN32) || defined(_WIN64)
+#endif // defined(_WIN32) || defined(_WIN64)
 
 /*----------------------------------------------------------------------------*/
 

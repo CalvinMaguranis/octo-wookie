@@ -2,83 +2,138 @@
 #include <string>
 
 #include <SDL.h>
+#include <SDL_image.h>
 
 #include "cleanup.h"
-#include "cross_platform.h"
 
 // globals
+const int __IMG_INIT_ALL = (IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP);
 const int __SDL_RENDERER_USE_HW_DRIVERS = -1;
 SDL_Window *win;
 SDL_Renderer *ren;
-SDL_Texture *tex;
+SDL_Texture *bg;
+SDL_Texture *fg;
+
 
 // forward declarations
+void all_quit();
+bool handle_input();
 std::string get_res_path(const std::string &path="");
 bool init(const char * label, int width, int height);
+SDL_Texture * load_texture(const std::string &file_path, SDL_Renderer *ren);
+void render_texture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y);
+void render_texture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int h);
+
+/** <<<can't really beat this...>>>
+* Log an SDL error with some error message to the output stream of our choice
+* @param os The output stream to write the message to
+* @param msg The error message to write, format will be msg error: SDL_GetError()
+*/
+void log_error(std::ostream &os, const std::string &msg) 
+{
+	os << msg << " Error: " << SDL_GetError() << std::endl;
+	SDL_Delay(5000);
+}
 
 int main(int argc, char** argv)
 {
     if (init("test SDL", 640, 480)==false) {
         return -1;
     } else {
-        SDL_RenderClear(ren);
-        SDL_RenderCopy(ren, tex, NULL, NULL);
-        SDL_RenderPresent(ren);
+		auto *player_sprite = load_texture("foo.png", ren);
+		SDL_Rect sprite_info = { (640-64)/2, (480-205)/2, 64, 205 };
+		SDL_Rect sprite_loc = { 0, 0, 64, 205 };
 
-        SDL_Delay(2000);
 
-        SDL_DestroyTexture(tex);
-        SDL_DestroyRenderer(ren);
-        SDL_DestroyWindow(win);
-        SDL_Quit();
+		const int max_fps = 60;
+		const int ms_per_frame = 1000 / max_fps;
+		bool q = false;
+
+		/*
+		SDL_RenderClear(ren);
+		render_texture(bg, ren, 0, 0);
+		render_texture(fg, ren, 0, 0);
+		SDL_RenderCopy(ren, player_sprite, &sprite_info, &sprite_loc);
+		SDL_RenderPresent(ren);
+		*/
+
+		int dt = 0, frame = 0, count = 0;
+		while (!q) {
+			if (count > max_fps) {
+				count = 0;
+			}
+
+			const int start_t = SDL_GetTicks();
+			q = handle_input();
+
+			if (count % (max_fps / 4) == 0) {
+				SDL_RenderClear(ren);
+				render_texture(bg, ren, 0, 0);
+				render_texture(fg, ren, 0, 0);
+				SDL_RenderCopy(ren, player_sprite, &sprite_loc, &sprite_info);
+				SDL_RenderPresent(ren);
+
+				sprite_loc.x = frame*sprite_info.w;
+				frame = (frame + 1) % 4;
+				//std::cout << "sprite x: " << sprite_loc.x << std::endl;
+			}
+			count++;
+
+			dt = SDL_GetTicks() - start_t;
+			if (dt < ms_per_frame) {
+				SDL_Delay(ms_per_frame - dt);
+			}
+		}
+
+		cleanup(fg, bg, ren, win);
+		all_quit();
     }
 
     return 0;
+}
+
+void all_quit() 
+{
+	IMG_Quit();
+	SDL_Quit();
 }
 
 // sets up window and default renderer
 bool init(const char * label, int width, int height)
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
+		log_error(std::cout, "SDL_Init()");
         return false;
     }
 
+	if ((IMG_Init(__IMG_INIT_ALL) & __IMG_INIT_ALL) != __IMG_INIT_ALL) {
+		log_error(std::cout, "IMG_Init()");
+	}
+
     win = SDL_CreateWindow(label, 50, 50, width, height, SDL_WINDOW_SHOWN);
     if (win == nullptr) {
-        std::cout << "SDL_CreateWindow error: " << SDL_GetError() << std::endl;
-        cleanup(win);
-        SDL_Quit();
+		log_error(std::cout, "SDL_CreateWindow()");
+        all_quit();
         return false;
     }
 
     ren = SDL_CreateRenderer(win, __SDL_RENDERER_USE_HW_DRIVERS,
             SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (ren == nullptr) {
-        std::cout << "SDL_CreateRenderer error: " << SDL_GetError() << std::endl;
-        cleanup(ren, win);
-        SDL_Quit();
+		log_error(std::cout, "SDL_CreateRenderer(bg)");
+        cleanup(win);
+        all_quit();
         return false;
     }
 
-    std::string res = "../res/simpsons.bmp";
-    std::string res_path = get_res_path(res);
-    SDL_Surface *bg = SDL_LoadBMP(res_path.c_str());
-    if (bg == nullptr) {
-        cleanup(ren, win);
-        std::cout << "SDL_LoadBMP Error: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-        return false;
-    }
-
-    tex = SDL_CreateTextureFromSurface(ren, bg);
-    SDL_FreeSurface(bg);
-    if (tex == nullptr) {
-        cleanup(ren, win);
-        std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-        return false;
-    }
+	//std::string res = "res/";
+	bg = load_texture("simpsons.bmp", ren);
+	fg = load_texture("doh.png", ren);
+	if (bg == nullptr || fg == nullptr) {
+		cleanup(bg, fg, ren,  win);
+		all_quit();
+		return false;
+	}
 
     return true;
 }
@@ -89,10 +144,60 @@ std::string get_res_path(const std::string &path)
     const char *base = SDL_GetBasePath();
     if (base == nullptr) {
         // something went wrong
-        std::cout << "SDL_GetBasePath error: " << SDL_GetError() << std::endl;
+		log_error(std::cout, "SDL_GetBasePath()");
         return "";
     } else {
         base_path = base;
     }
     return base_path + path;
+}
+
+//log_error(std::ostream &os, const std::string &msg)
+SDL_Texture * load_texture(const std::string &file_path, SDL_Renderer *ren) 
+{
+	auto *tex = IMG_LoadTexture(ren, file_path.c_str());
+	if (tex == nullptr) {
+		log_error(std::cout, "IMG_LoadTexture");
+	}
+	return tex;
+}
+
+void render_texture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y) 
+{
+	SDL_Rect dest;
+	int w, h;
+	if (SDL_QueryTexture(tex, NULL, NULL, &w, &h) != 0) {
+		log_error(std::cout, "SDL_QueryTexture");
+	}
+	render_texture(tex, ren, x, y, w, h);
+}
+
+void render_texture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int h)
+{
+	SDL_Rect dest;
+	dest.x = x;
+	dest.y = y;
+	dest.w = w;
+	dest.h = h;
+	if (SDL_RenderCopy(ren, tex, NULL, &dest) != 0) {
+		log_error(std::cout, "SDL_RenderCopy");
+	}
+}
+
+bool handle_input() 
+{
+	SDL_Event e;
+	bool quit = false;
+	while (SDL_PollEvent(&e)) {
+		if ((e.type == SDL_QUIT) || 
+			(e.type == SDL_MOUSEBUTTONDOWN) || 
+			(e.type == SDL_KEYDOWN)) {
+			quit = true;
+		}
+	}
+	return quit;
+}
+
+void animate_player(SDL_Texture *sprite, SDL_Rect sprite_info, int fps, int dt) {
+		
 }
