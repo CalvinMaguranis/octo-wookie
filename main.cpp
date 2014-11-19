@@ -35,6 +35,7 @@ void log_error(std::ostream &os, const std::string &msg)
 	SDL_Delay(5000);
 }
 
+
 int main(int argc, char** argv)
 {
     if (init("test SDL", 640, 480)==false) {
@@ -110,7 +111,7 @@ bool init(const char * label, int width, int height)
 		log_error(std::cout, "IMG_Init()");
 	}
 
-    win = SDL_CreateWindow(label, 50, 50, width, height, SDL_WINDOW_SHOWN);
+	win = SDL_CreateWindow(label, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     if (win == nullptr) {
 		log_error(std::cout, "SDL_CreateWindow()");
         all_quit();
