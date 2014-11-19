@@ -1,0 +1,11 @@
+/*
+ * UTF8 <lang_encoding>:
+ *  cstor () : create hash tree with proper utf-8 encodings
+ *  char_iter(const char *str_byte) :
+ *      if ((*char & utf8_bitmask_1byte) == utf8_bitmask_1byte):
+ *          ret char++
+ *      ELIF(2..4bytes)
+ *
+ *      return char_pos;
+ *
+ */
