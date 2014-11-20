@@ -99,45 +99,7 @@ void all_quit()
 	SDL_Quit();
 }
 
-// sets up window and default renderer
-bool init(const char * label, int width, int height)
-{
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		log_error(std::cout, "SDL_Init()");
-        return false;
-    }
 
-	if ((IMG_Init(__IMG_INIT_ALL) & __IMG_INIT_ALL) != __IMG_INIT_ALL) {
-		log_error(std::cout, "IMG_Init()");
-	}
-
-	win = SDL_CreateWindow(label, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
-    if (win == nullptr) {
-		log_error(std::cout, "SDL_CreateWindow()");
-        all_quit();
-        return false;
-    }
-
-    ren = SDL_CreateRenderer(win, __SDL_RENDERER_USE_HW_DRIVERS,
-            SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (ren == nullptr) {
-		log_error(std::cout, "SDL_CreateRenderer(bg)");
-        cleanup(win);
-        all_quit();
-        return false;
-    }
-
-	//std::string res = "res/";
-	bg = load_texture("simpsons.bmp", ren);
-	fg = load_texture("doh.png", ren);
-	if (bg == nullptr || fg == nullptr) {
-		cleanup(bg, fg, ren,  win);
-		all_quit();
-		return false;
-	}
-
-    return true;
-}
 
 std::string get_res_path(const std::string &path)
 {
