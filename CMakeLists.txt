@@ -27,10 +27,20 @@ include_directories(include)
 find_package(SDL2_IMAGE REQUIRED)
 include_directories(${SDL2_IMAGE_INCLUDE_DIR})
 
+# SDL2_ttf
+find_package(SDL2_TTF REQUIRED)
+include_directories(${SDL2_TTF_INCLUDE_DIR})
+
+# SDL2_mixer
+find_package(SDL2_MIXER REQUIRED)
+include_directories(${SDL2_MIXER_INCLUDE_DIR})
+
 # Setup actual executable
 add_executable(${PROJECT_NAME}  main.cpp game.cpp ow_texture.cpp)
 
-target_link_libraries(${PROJECT_NAME}  ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY})
-#target_link_libraries(${PROJECT_NAME}  ${SDL2_LIBRARY})
+target_link_libraries(${PROJECT_NAME}  ${SDL2_LIBRARY} 
+                                       ${SDL2_IMAGE_LIBRARY}
+                                       ${SDL2_MIXER_LIBRARY}
+                                       ${SDL2_TTF_LIBRARY})
 
 install(TARGETS ${PROJECT_NAME}  RUNTIME DESTINATION ${BIN_DIR})
