@@ -36,7 +36,7 @@ void Game::loop()
 
 		bool q = false;
 
-		int dt = 0, count = 0;
+		int dt = 0, count = 0, f=0;
 		while (!q) {
 			if (count > max_fps-1) {
 				count = 0;
@@ -45,21 +45,20 @@ void Game::loop()
 			const int start_t = SDL_GetTicks();
 			q = handle_input();
 
-
-			if (count % (max_fps / frames) == 0)
-			{
-				int f = count / (max_fps / frames);
-				SDL_RenderClear(_r);
-				
-				background.render(_r, 0, 0, NULL);
-				player_sprite.render(_r,
-					s_x, s_y, &foo_frames[f]);
-				
-				SDL_RenderPresent(_r);
-
+			// update sprite frame
+			if (count % (max_fps / frames) == 0) {
+				f = count / (max_fps / frames);
 			}
+			
+			// render everything for time dt
+			SDL_RenderClear(_r);
+			background.render(_r, 0, 0, NULL);
+			player_sprite.render(_r,
+				s_x, s_y, &foo_frames[f]);
+			SDL_RenderPresent(_r);
 			count++;
 
+			// spin our wheels...
 			dt = SDL_GetTicks() - start_t;
 			if (dt < ms_per_frame) {
 				SDL_Delay(ms_per_frame - dt);
