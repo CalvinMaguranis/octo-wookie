@@ -4,9 +4,9 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include <cleanup.h>
-#include <ow_error.h>
-#include <ow_texture.h>
+#include "cleanup.h"
+#include "ow_error.h"
+#include "ow_texture.h"
 
 ow_texture::ow_texture() 
 {
@@ -43,9 +43,13 @@ bool ow_texture::load_file(SDL_Renderer *ren, std::string path)
 	return true;
 }
 
-void ow_texture::render(SDL_Renderer *ren, int x, int y, SDL_Rect *clip=NULL)
+void ow_texture::render(SDL_Renderer *ren, int x, int y, SDL_Rect *clip)
 {
 	SDL_Rect render_quad = { x, y, _width, _height };
+	if (clip != NULL) {
+		render_quad.w = clip->w;
+		render_quad.h = clip->h;
+	}
 	SDL_RenderCopy(ren, _texture, clip, &render_quad);
 }
 

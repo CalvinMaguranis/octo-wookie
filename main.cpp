@@ -4,8 +4,9 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include "cleanup.h"
+#include "game.h"
 
+#if 0
 // globals
 const int __IMG_INIT_ALL = (IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP);
 const int __SDL_RENDERER_USE_HW_DRIVERS = -1;
@@ -34,10 +35,11 @@ void log_error(std::ostream &os, const std::string &msg)
 	os << msg << " Error: " << SDL_GetError() << std::endl;
 	SDL_Delay(5000);
 }
-
+#endif
 
 int main(int argc, char** argv)
 {
+#if 0
     if (init("test SDL", 640, 480)==false) {
         return -1;
     } else {
@@ -89,10 +91,15 @@ int main(int argc, char** argv)
 		cleanup(fg, bg, ren, win);
 		all_quit();
     }
+#endif
+
+	Game game;
+	game.loop();
 
     return 0;
 }
 
+#if 0
 void all_quit() 
 {
 	IMG_Quit();
@@ -147,20 +154,9 @@ void render_texture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, in
 	}
 }
 
-bool handle_input() 
-{
-	SDL_Event e;
-	bool quit = false;
-	while (SDL_PollEvent(&e)) {
-		if ((e.type == SDL_QUIT) || 
-			(e.type == SDL_MOUSEBUTTONDOWN) || 
-			(e.type == SDL_KEYDOWN)) {
-			quit = true;
-		}
-	}
-	return quit;
-}
+
 
 void animate_player(SDL_Texture *sprite, SDL_Rect sprite_info, int fps, int dt) {
 		
 }
+#endif

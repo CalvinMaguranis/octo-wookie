@@ -18,7 +18,7 @@ public:
 
 	// Renders texture clip at point (x,y), leave clip
 	// blank to default to NULL
-	void render(SDL_Renderer *ren, int x, int y, SDL_Rect *clip=NULL);
+	void render(SDL_Renderer *ren, int x, int y, SDL_Rect *clip);
 
 	// accessors
 	int get_width() { return _width; }
