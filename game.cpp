@@ -8,10 +8,10 @@
 
 // utils
 //#include "cleanup.h"
-//#include "ow_error.h"
+#include "ow_error.hpp"
 
-#include "game.h"
-#include "ow_texture.h"
+#include "game.hpp"
+#include "ow_texture.hpp"
 
 SDL_Rect foo_frames[] = {
 	{ 0,   0, 64, 205 },
