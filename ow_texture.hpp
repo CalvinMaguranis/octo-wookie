@@ -17,6 +17,7 @@ namespace ow
 		ow_texture(SDL_Renderer *r, std::string path);
 		// initialize for alpha blending
 		ow_texture(SDL_Renderer *r, std::string fg, std::string bg);
+		ow_texture(SDL_Surface *s);
 		~ow_texture();
 
 		//-----------------------------------------------------------------//
@@ -26,7 +27,7 @@ namespace ow
 		// these can be used to overwrite existing textures
 		bool load_file(SDL_Renderer *ren, std::string path);
 		bool load_alpha_file(SDL_Renderer *ren, std::string bg = "");
-		bool load_surface(SDL_Surface *s);
+		bool load_surface(SDL_Renderer *r, SDL_Surface *s);
 
 		// Renders texture clip at point (x,y), leave clip blank to default to NULL
 		void render(SDL_Renderer *ren, int x, int y, SDL_Rect *clip = nullptr);

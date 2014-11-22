@@ -76,16 +76,13 @@ namespace ow
 				SDL_RenderClear(_r);
 
 				background.render(_r, 0, 0, NULL);
-				SDL_Delay(1);
 				doh.render(_r, (win_width - doh.get_width()),
 					(win_height - doh.get_height()), NULL);
-				SDL_Delay(1);
 				player_sprite.render(_r,
 					s_x, s_y, &foo_frames[f]);
 				
 				SDL_RenderPresent(_r);
 				count++;
-
 
 				// spin our wheels...
 				dt = SDL_GetTicks() - start_t;

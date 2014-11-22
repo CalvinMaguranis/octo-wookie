@@ -67,6 +67,17 @@ namespace ow
 		return true;
 	}
 
+	bool ow_texture::load_surface(SDL_Renderer *r, SDL_Surface *s)
+	{
+		_texture = SDL_CreateTextureFromSurface(r, s);
+		if (_texture == nullptr) {
+			log_error(std::cout, "ow_texture::SDL_CreateTextureFromSurface");
+			return false;
+		}
+		SDL_FreeSurface(s);
+		return true;
+	}
+
 	void ow_texture::render(SDL_Renderer *ren, int x, int y, SDL_Rect *clip)
 	{
 		SDL_Rect render_quad = { x, y, _width, _height };
