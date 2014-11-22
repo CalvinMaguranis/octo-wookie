@@ -7,7 +7,6 @@
 #include <SDL_image.h>
 
 // utils
-//#include "cleanup.h"
 #include "ow_error.hpp"
 
 #include "game.hpp"
@@ -19,6 +18,11 @@ SDL_Rect foo_frames[] = {
 	{ 128, 0, 64, 205 },
 	{ 192, 0, 64, 205 },
 };
+
+Game::~Game() 
+{
+	all_quit();
+}
 
 // handles game state 
 void Game::loop() 
@@ -75,17 +79,17 @@ void Game::loop()
 bool Game::init(const char * label, int width, int height)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-//		log_error(std::cout, "SDL_Init()");
+		log_error(std::cout, "SDL_Init()");
 		return false;
 	}
 
 	if ((IMG_Init(__IMG_INIT_ALL) & __IMG_INIT_ALL) != __IMG_INIT_ALL) {
-//		log_error(std::cout, "IMG_Init()");
+		log_error(std::cout, "IMG_Init()");
 	}
 
 	_w = SDL_CreateWindow(label, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
 	if (_w == nullptr) {
-//		log_error(std::cout, "SDL_CreateWindow()");
+		log_error(std::cout, "SDL_CreateWindow()");
 		all_quit();
 		return false;
 	}
@@ -93,8 +97,8 @@ bool Game::init(const char * label, int width, int height)
 	_r = SDL_CreateRenderer(_w, __SDL_RENDERER_USE_HW_DRIVERS,
 		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (_r == nullptr) {
-//		log_error(std::cout, "SDL_CreateRenderer(bg)");
-		
+		log_error(std::cout, "SDL_CreateRenderer(bg)");
+		SDL_DestroyWindow(_w);
 		all_quit();
 		return false;
 	}
@@ -107,9 +111,7 @@ bool Game::handle_input()
 	SDL_Event e;
 	bool quit = false;
 	while (SDL_PollEvent(&e)) {
-		if ((e.type == SDL_QUIT) ||
-			(e.type == SDL_MOUSEBUTTONDOWN) ||
-			(e.type == SDL_KEYDOWN)) {
+		if (e.type == SDL_QUIT) {
 			quit = true;
 		}
 	}

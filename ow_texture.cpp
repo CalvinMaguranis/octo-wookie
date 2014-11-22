@@ -4,9 +4,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include "cleanup.h"
-#include "ow_error.h"
-#include "ow_texture.h"
+#include "ow_error.hpp"
+#include "ow_texture.hpp"
 
 ow_texture::ow_texture() 
 {
@@ -56,7 +55,7 @@ void ow_texture::render(SDL_Renderer *ren, int x, int y, SDL_Rect *clip)
 void ow_texture::free()
 {
 	if (_texture != nullptr) {
-		cleanup(_texture);
+		SDL_DestroyTexture(_texture);
 		_texture = nullptr;
 		_width = 0;
 		_height = 0;

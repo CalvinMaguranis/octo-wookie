@@ -1,9 +1,6 @@
 #include <iostream>
 #include <string>
 
-#include <SDL.h>
-#include <SDL_image.h>
-
 #include "game.hpp"
 
 #if 0

@@ -1,11 +1,16 @@
 #ifndef __GAME_CLASS_H
 #define __GAME_CLASS_H
 
+struct SDL_Window;
+struct SDL_Renderer;
 
 class Game {
 public:
-	Game() : max_fps(60), win_width(640), win_height(480), __IMG_INIT_ALL((IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP)), __SDL_RENDERER_USE_HW_DRIVERS(-1) {}
-	~Game() {};
+	Game() : max_fps(60), win_width(640), win_height(480), 
+		__IMG_INIT_ALL(0xF), /* IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF | IMG_INIT_WEBP */
+		__SDL_RENDERER_USE_HW_DRIVERS(-1) 
+	{}
+	~Game();
 
 	void loop();
 	SDL_Renderer *get_ren() { return _r; }
