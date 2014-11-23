@@ -2,7 +2,7 @@
 #ifndef __OW_TEXTURE_CLASS_H
 #define __OW_TEXTURE_CLASS_H
 
-#include "ow_types.hpp"
+#include "ow_types.h"
 
 namespace ow
 {
@@ -27,10 +27,17 @@ namespace ow
 		// these can be used to overwrite existing textures
 		bool load_file(SDL_Renderer *ren, std::string path);
 		bool load_alpha_file(SDL_Renderer *ren, std::string bg = "");
-		bool load_surface(SDL_Renderer *r, SDL_Surface *s);
+		bool load_ttf(SDL_Renderer *r, std::string ttf, int pt=12);
 
 		// Renders texture clip at point (x,y), leave clip blank to default to NULL
-		void render(SDL_Renderer *ren, int x, int y, SDL_Rect *clip = nullptr);
+		void render(SDL_Renderer *ren, 
+					const int x=0, 
+					const int y=0, 
+					const SDL_Rect *clip=NULL,
+					const double angle=0.0, 
+					const SDL_Point *center=NULL, 
+					const SDL_RendererFlip flip=SDL_FLIP_NONE);
+
 
 		//-----------------------------------------------------------------//
 		// Texture modifiers
@@ -78,6 +85,8 @@ namespace ow
 		SDL_Texture *_texture;
 		int _width;
 		int _height;
+
+		SDL_Surface *load_surface(std::string s);
 	};
 
 } // namespace ow

@@ -3,6 +3,7 @@
 
 struct SDL_Window;
 struct SDL_Renderer;
+//struct TTF_Font;
 
 namespace ow
 {
@@ -31,6 +32,7 @@ namespace ow
 		// sets up window and default renderer
 		bool init(const char * label, int width, int height);
 		bool handle_input();
+		bool load_font(std::string font, const int pt=20);
 
 		void all_quit();
 	};

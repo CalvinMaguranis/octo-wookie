@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 
 #include "ow_error.hpp"
 #include "ow_texture.hpp"
@@ -11,20 +12,24 @@ namespace ow
 {
 	ow_texture::ow_texture()
 	{
-		_texture = nullptr;
+		_texture = NULL;
 		_width = 0;
 		_height = 0;
 	}
 
 	ow_texture::ow_texture(SDL_Renderer *r, std::string path)
 	{
-		ow_texture();
+		_texture = NULL;
+		_width = 0;
+		_height = 0;
 		load_file(r, path);
 	}
 
 	ow_texture::ow_texture(SDL_Renderer *r, std::string fg, std::string bg)
 	{
-		ow_texture();
+		_texture = NULL;
+		_width = 0;
+		_height = 0;
 		load_file(r, fg);
 		load_alpha_file(r, bg);
 	}
@@ -36,15 +41,16 @@ namespace ow
 
 	bool ow_texture::load_file(SDL_Renderer *ren, std::string path)
 	{
+		free();
 		_texture = IMG_LoadTexture(ren, path.c_str());
-		if (_texture == nullptr) {
+		if (_texture == NULL) {
 			log_error(std::cout, "ow_texture::load_file");
 			return false;
 		}
 		else {
 			// get other parameters of the texture
 			if (SDL_QueryTexture(_texture,
-				nullptr, nullptr,
+				NULL, NULL,
 				&_width, &_height) != 0) {
 				log_error(std::cout, "ow_texture::load_file::SDL_QueryTexture");
 				return false;
@@ -67,25 +73,33 @@ namespace ow
 		return true;
 	}
 
-	bool ow_texture::load_surface(SDL_Renderer *r, SDL_Surface *s)
+	bool ow_texture::load_ttf(SDL_Renderer *r, std::string ttf, int pt)
 	{
-		_texture = SDL_CreateTextureFromSurface(r, s);
-		if (_texture == nullptr) {
-			log_error(std::cout, "ow_texture::SDL_CreateTextureFromSurface");
-			return false;
-		}
-		SDL_FreeSurface(s);
+		auto loaded_ttf = TTF_OpenFont(ttf.c_str(), pt);
 		return true;
 	}
 
-	void ow_texture::render(SDL_Renderer *ren, int x, int y, SDL_Rect *clip)
+	SDL_Surface *load_surface(std::string s)
+	{
+		auto *loaded_surface = IMG_Load(s.c_str());
+		return loaded_surface;
+		//auto *optimized_surface = SDL_ConvertSurface(load_surface, ,)
+	}
+
+	void ow_texture::render(SDL_Renderer *ren, 
+							const int x, 
+							const int y, 
+							const SDL_Rect *clip,
+							const double a, 
+							const SDL_Point *c, 
+							const SDL_RendererFlip f)
 	{
 		SDL_Rect render_quad = { x, y, _width, _height };
-		if (clip != nullptr) {
+		if (clip != NULL) {
 			render_quad.w = clip->w;
 			render_quad.h = clip->h;
 		}
-		SDL_RenderCopy(ren, _texture, clip, &render_quad);
+		SDL_RenderCopyEx(ren, _texture, clip, &render_quad, a, c, f);
 	}
 
 	// blend_mode
@@ -110,9 +124,9 @@ namespace ow
 
 	void ow_texture::free()
 	{
-		if (_texture != nullptr) {
+		if (_texture != NULL) {
 			SDL_DestroyTexture(_texture);
-			_texture = nullptr;
+			_texture = NULL;
 			_width = 0;
 			_height = 0;
 		}

@@ -3,6 +3,14 @@
 
 namespace ow
 {
+	//#define OW_DEBUG
+
+	#ifdef OW_DEBUG
+		#define DEBUG_PRINT(str) std::cout << str << std::endl
+	#else
+		#define DEBUG_PRINT(str)
+	#endif
+
 	void log_error(std::ostream &os, const std::string &msg);
 }
 

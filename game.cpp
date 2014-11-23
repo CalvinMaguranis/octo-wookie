@@ -5,16 +5,20 @@
 // SDL
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
+#include <SDL_mixer.h>
 
 // utils
 #include "ow_error.hpp"
+#include "ow_types.hpp"
 
 #include "game.hpp"
 #include "ow_texture.hpp"
 
+
+
 namespace ow
 {
-
 	SDL_Rect foo_frames[] = {
 		{ 0, 0, 64, 205 },
 		{ 64, 0, 64, 205 },
@@ -70,7 +74,7 @@ namespace ow
 				if (count % (max_fps / frames) == 0) {
 					f = count / (max_fps / frames);
 				}
-				std::cout << f << std::endl;
+				DEBUG_PRINT("Frame: " << f << ", alpha: " << (int)alpha);
 
 				// render everything for time dt
 				SDL_RenderClear(_r);
@@ -107,6 +111,18 @@ namespace ow
 
 		if ((IMG_Init(__IMG_INIT_ALL) & __IMG_INIT_ALL) != __IMG_INIT_ALL) {
 			log_error(std::cout, "IMG_Init()");
+			return false;
+		}
+
+		if (TTF_Init() != 0) {
+			log_error(std::cout, "TTF_Init()");
+			return false;
+		}
+
+		const int m_flags = MIX_INIT_OGG | MIX_INIT_MP3;
+		if ((Mix_Init(m_flags) & m_flags) != m_flags) {
+			log_error(std::cout, "Mix_Init()");
+			return false;
 		}
 
 		_w = SDL_CreateWindow(label, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
@@ -140,8 +156,19 @@ namespace ow
 		return quit;
 	}
 
+	bool Game::load_font(std::string font, const int pt)
+	{
+		auto _f = TTF_OpenFont(font.c_str(), pt);
+		if (_f == NULL) {
+			return false;
+		}
+		return true;
+	}
+
 	void Game::all_quit()
 	{
+		Mix_Quit();
+		TTF_Quit();
 		IMG_Quit();
 		SDL_Quit();
 	}

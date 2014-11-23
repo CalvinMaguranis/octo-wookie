@@ -16,4 +16,6 @@ namespace ow
 		os << msg << " Error: " << SDL_GetError() << std::endl;
 	}
 
+
+
 } // namespace ow

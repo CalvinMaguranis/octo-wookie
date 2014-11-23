@@ -1,6 +1,7 @@
 #ifndef __OW_TYPES_H
 #define __OW_TYPES_H
 
+#include <stdint.h>
 namespace ow
 {
     typedef uint8_t  ui8; 
