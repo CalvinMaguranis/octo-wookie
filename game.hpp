@@ -19,12 +19,11 @@ namespace ow
 		{}
 		~Game();
 
-		// sets up window and default renderer
-		bool init(const char * label, int width, int height);
 		void loop();
 		bool load_font(std::string font, const int pt = 20);
 
 		SDL_Renderer *get_ren() { return _r; }
+		TTF_Font *get_font() { return _f; }
 	private:
 		const int max_fps;
 		const int win_width;
@@ -38,6 +37,8 @@ namespace ow
 		const int __IMG_INIT_ALL;
 		const int __SDL_RENDERER_USE_HW_DRIVERS;
 
+		// sets up window and default renderer
+		bool init(const char * label, int width, int height);
 		bool handle_input();
 
 		void all_quit();

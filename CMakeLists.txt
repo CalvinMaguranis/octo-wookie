@@ -39,7 +39,7 @@ include_directories(${SDL2_MIXER_INCLUDE_DIR})
 add_executable(${PROJECT_NAME}  main.cpp 
                                 game.cpp 
                                 ow_texture.cpp
-                                ow_text_stream.cpp
+                                #ow_text_stream.cpp
                                 ow_error.cpp)
 
 target_link_libraries(${PROJECT_NAME}  ${SDL2_LIBRARY} 

@@ -35,27 +35,48 @@ namespace ow
 		_texture = NULL;
 		_width = 0;
 		_height = 0;
-		load_file(r, fg);
-		load_alpha_file(r, bg);
+		load_file(r, fg, bg);
 	}
+
+	ow_texture::ow_texture(SDL_Renderer *r, TTF_Font *f, 
+						   std::string msg, SDL_Color c)
+	{
+		_texture = NULL;
+		_width = 0;
+		_height = 0;
+		load_from_text(r, f, msg, c);
+	}
+
+
 
 	ow_texture::~ow_texture()
 	{
 		free();
 	}
 
-	bool ow_texture::load_file(SDL_Renderer *ren, std::string path)
+	bool ow_texture::load_file(SDL_Renderer *ren, std::string fg, std::string bg)
 	{
+		// should have a valid fg
+		if (fg == "") { return false; }
 		free();
-		_texture = IMG_LoadTexture(ren, path.c_str());
+
+		_texture = IMG_LoadTexture(ren, fg.c_str());
 		if (_texture == NULL) {
 			log_error(std::cout, "ow_texture::load_file");
 			return false;
 		}
 		else {
+			if (bg != "") {
+				// allow alpha blending
+				blend_mode(SDL_BLENDMODE_BLEND);
+				if (load_file(ren, bg.c_str()) != true) {
+					log_error(std::cout, "ow_texture::load_alpha_file::load_file");
+					return false;
+				}
+			}
+
 			// get other parameters of the texture
-			if (SDL_QueryTexture(_texture,
-				NULL, NULL,
+			if (SDL_QueryTexture(_texture, NULL, NULL,
 				&_width, &_height) != 0) {
 				log_error(std::cout, "ow_texture::load_file::SDL_QueryTexture");
 				return false;
@@ -66,12 +87,38 @@ namespace ow
 
 	bool ow_texture::load_alpha_file(SDL_Renderer *ren, std::string bg)
 	{
-		// allow alpha blending
-		blend_mode(SDL_BLENDMODE_BLEND);
-
+		// this load function does not call free since it is a bolt-on
 		if (bg != "") {
+			// allow alpha blending
+			blend_mode(SDL_BLENDMODE_BLEND);
 			if (load_file(ren, bg.c_str()) != true) {
 				log_error(std::cout, "ow_texture::load_alpha_file::load_file");
+				return false;
+			}
+		}
+		return true;
+	}
+
+	bool ow_texture::load_from_text(SDL_Renderer *ren, TTF_Font *font,
+									std::string msg, SDL_Color color)
+	{
+		free();
+		SDL_Surface *s = TTF_RenderText_Blended(font, msg.c_str(), color);
+		if (s == NULL) {
+			log_error(std::cout, "ow_texture::load_from_text::TTF_RenderText_Blended");
+			return false;
+		} else {
+			_texture = SDL_CreateTextureFromSurface(ren, s);
+			SDL_FreeSurface(s);
+			if (_texture == NULL) {
+				log_error(std::cout, "ow_texture::load_from_text::_texture==NULL");
+				return false;
+			}
+
+			// get other parameters of the texture
+			if (SDL_QueryTexture(_texture, NULL, NULL,
+				&_width, &_height) != 0) {
+				log_error(std::cout, "ow_texture::load_file::SDL_QueryTexture");
 				return false;
 			}
 		}

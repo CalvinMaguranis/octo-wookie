@@ -5,7 +5,7 @@
 
 namespace ow
 {
-	//#define OW_DEBUG
+	#define OW_DEBUG
 
 	#ifdef OW_DEBUG
 		#define DEBUG_PRINT(str) std::cout << str << std::endl

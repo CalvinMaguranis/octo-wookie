@@ -15,8 +15,6 @@
 #include "game.hpp"
 #include "ow_texture.hpp"
 
-
-
 namespace ow
 {
 	SDL_Rect foo_frames[] = {
@@ -36,16 +34,24 @@ namespace ow
 	{
 		if (init("test SDL", win_width, win_height))
 		{
+			if (load_font("UbuntuMono-R.ttf") == false) {
+				std::cout << "Font loading failed!" << std::endl;
+				all_quit();
+				return;
+			}
+
 			ow_texture player_sprite(_r, "foo.png");			
 			ow_texture background(_r, "simpsons.png");
 			ow_texture doh(_r, "doh.png");
 			doh.blend_mode(SDL_BLENDMODE_BLEND);
+			ow_texture msg(_r, _f, "fuck font rendering!");
 
 			const int ms_per_frame = 1000 / max_fps;
+
 			const int frames = sizeof(foo_frames) / sizeof(foo_frames[0]);
-			const int sprite_x = player_sprite.get_width() / frames;
+			const int sprite_x = player_sprite.width() / frames;
 			const int s_x = (win_width - sprite_x) / 2;
-			const int s_y = (win_height - player_sprite.get_height()) / 2;
+			const int s_y = (win_height - player_sprite.height()) / 2;
 
 			bool q = false;
 
@@ -74,16 +80,17 @@ namespace ow
 				if (count % (max_fps / frames) == 0) {
 					f = count / (max_fps / frames);
 				}
-				DEBUG_PRINT("Frame: " << f << ", alpha: " << (int)alpha);
+				//DEBUG_PRINT("Frame: " << f << ", alpha: " << (int)alpha);
 
 				// render everything for time dt
 				SDL_RenderClear(_r);
 
 				background.render(_r, 0, 0, NULL);
-				doh.render(_r, (win_width - doh.get_width()),
-					(win_height - doh.get_height()), NULL);
+				doh.render(_r, (win_width - doh.width()),
+					(win_height - doh.height()), NULL);
 				player_sprite.render(_r,
 					s_x, s_y, &foo_frames[f]);
+				msg.render(_r, (win_width - msg.width()) / 2, (win_height - msg.width()) / 2);
 				
 				SDL_RenderPresent(_r);
 				count++;
@@ -95,9 +102,9 @@ namespace ow
 				}
 			}
 		}
-
-		SDL_DestroyRenderer(_r);
-		SDL_DestroyWindow(_w);
+		else {
+			DEBUG_PRINT("Game::init() failed");
+		}
 		all_quit();
 	}
 
@@ -159,6 +166,15 @@ namespace ow
 			TTF_CloseFont(_f);
 			_f = NULL;
 		}
+		if (_r != NULL) {
+			SDL_DestroyRenderer(_r);
+			_r = NULL;
+		}
+		if (_w != NULL) {
+			SDL_DestroyWindow(_w);
+			_w = NULL;
+		}
+
 		Mix_Quit();
 		TTF_Quit();
 		IMG_Quit();

@@ -19,6 +19,8 @@ namespace ow
 		ow_texture(SDL_Renderer *r, std::string path);
 		// initialize for alpha blending
 		ow_texture(SDL_Renderer *r, std::string fg, std::string bg);
+		ow_texture(SDL_Renderer *r, TTF_Font *f,
+				   std::string msg, SDL_Color c = { 0, 0, 0, 0 });
 		ow_texture(SDL_Surface *s);
 		~ow_texture();
 
@@ -27,8 +29,10 @@ namespace ow
 		//-----------------------------------------------------------------//
 		// loads a new texture and stores it in this class
 		// these can be used to overwrite existing textures
-		bool load_file(SDL_Renderer *ren, std::string path);
-		bool load_alpha_file(SDL_Renderer *ren, std::string bg = "");
+		bool load_file(SDL_Renderer *ren, std::string fg, std::string bg = "");
+		bool load_alpha_file(SDL_Renderer *ren, std::string bg);
+		bool load_from_text(SDL_Renderer *ren, TTF_Font *font, 
+							std::string msg, SDL_Color color = { 0, 0, 0, 0 });
 
 		// Renders texture clip at point (x,y), leave clip blank to default to NULL
 		void render(SDL_Renderer *ren, 
@@ -76,8 +80,8 @@ namespace ow
 		//-----------------------------------------------------------------//
 		// accessors
 		//-----------------------------------------------------------------//
-		int get_width() { return _width; }
-		int get_height() { return _height; }
+		int width() { return _width; }
+		int height() { return _height; }
 
 		// deallocate texture
 		void free();
