@@ -1,6 +1,8 @@
 #ifndef __OW_ERROR_TOOLS_H
 #define __OW_ERROR_TOOLS_H
 
+#pragma once
+
 namespace ow
 {
 	//#define OW_DEBUG

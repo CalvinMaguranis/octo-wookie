@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <iostream>
 #include <string>
 
 #include "game.hpp"
@@ -14,7 +14,12 @@ TTF_Font *font;
 int main(int argc, char** argv)
 {
 	ow::Game game;
+	game.init("text test", 640, 480);
+	/*
+	
 	game.loop();
+	*/
+	system("PAUSE");
 
     return 0;
 }
@@ -38,18 +43,3 @@ void gen_ascii(int bound)
 	printf("\n};\n\tchars=%d\n\n", count + 1);
 	system("PAUSE");
 }
-//const char ascii;
-/*
-{
-
-
-
-!"#$%&'()*+,-./
-0123456789:;<=>?
-@ABCDEFGHIJKLMNO
-PQRSTUVWXYZ[\]^_
-`abcdefghijklmno
-pqrstuvwxyz{|}~
-};
-
-*/

@@ -1,11 +1,16 @@
+// stdlib
 #include <iostream>
 #include <string>
 
+// SDL
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
+// utils
 #include "ow_error.hpp"
+#include "ow_types.hpp"
+
 #include "ow_texture.hpp"
 
 namespace ow
@@ -70,12 +75,6 @@ namespace ow
 				return false;
 			}
 		}
-		return true;
-	}
-
-	bool ow_texture::load_ttf(SDL_Renderer *r, std::string ttf, int pt)
-	{
-		auto loaded_ttf = TTF_OpenFont(ttf.c_str(), pt);
 		return true;
 	}
 

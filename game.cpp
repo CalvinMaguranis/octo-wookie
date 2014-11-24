@@ -101,6 +101,15 @@ namespace ow
 		all_quit();
 	}
 
+	bool Game::load_font(std::string font, const int pt)
+	{
+		_f = TTF_OpenFont(font.c_str(), pt);
+		if (_f == NULL) {
+			return false;
+		}
+		return true;
+	}
+
 	// sets up window and default renderer
 	bool Game::init(const char * label, int width, int height)
 	{
@@ -144,6 +153,18 @@ namespace ow
 		return true;
 	}
 
+	void Game::all_quit()
+	{
+		if (_f != NULL) {
+			TTF_CloseFont(_f);
+			_f = NULL;
+		}
+		Mix_Quit();
+		TTF_Quit();
+		IMG_Quit();
+		SDL_Quit();
+	}
+
 	bool Game::handle_input()
 	{
 		SDL_Event e;
@@ -156,21 +177,6 @@ namespace ow
 		return quit;
 	}
 
-	bool Game::load_font(std::string font, const int pt)
-	{
-		auto _f = TTF_OpenFont(font.c_str(), pt);
-		if (_f == NULL) {
-			return false;
-		}
-		return true;
-	}
 
-	void Game::all_quit()
-	{
-		Mix_Quit();
-		TTF_Quit();
-		IMG_Quit();
-		SDL_Quit();
-	}
 
 } // namespace ow

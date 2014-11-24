@@ -1,9 +1,13 @@
 #ifndef __GAME_CLASS_H
 #define __GAME_CLASS_H
 
-struct SDL_Window;
-struct SDL_Renderer;
-//struct TTF_Font;
+#pragma once
+
+// SDL
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+#include <SDL_mixer.h>
 
 namespace ow
 {
@@ -15,7 +19,11 @@ namespace ow
 		{}
 		~Game();
 
+		// sets up window and default renderer
+		bool init(const char * label, int width, int height);
 		void loop();
+		bool load_font(std::string font, const int pt = 20);
+
 		SDL_Renderer *get_ren() { return _r; }
 	private:
 		const int max_fps;
@@ -25,14 +33,12 @@ namespace ow
 		bool quit;
 		SDL_Window   *_w;
 		SDL_Renderer *_r;
+		TTF_Font     *_f;
 
 		const int __IMG_INIT_ALL;
 		const int __SDL_RENDERER_USE_HW_DRIVERS;
 
-		// sets up window and default renderer
-		bool init(const char * label, int width, int height);
 		bool handle_input();
-		bool load_font(std::string font, const int pt=20);
 
 		void all_quit();
 	};
