@@ -1,14 +1,19 @@
 #ifndef __OW_PRIMITIVES_H
 #define __OW_PRIMITIVES_H
 
+#pragma once
+
 namespace ow
 {
 	// wraps SDL primitive drawing functions
     class Primitives
     {
 	public:
-		Primitives();
-		~Primitives();
+		Primitives() : _c({ 0, 0, 0, 0xff }) {}
+		Primitives(SDL_Color c) : _c(c) {}
+		//~Primitives() {}
+
+		void color(SDL_Color c);
 
 		void point(SDL_Renderer *r, const SDL_Point *p);
 		void points(SDL_Renderer *r, const SDL_Point *p, const int count);
@@ -35,6 +40,7 @@ namespace ow
 		void fill_rects(SDL_Renderer *r, const SDL_Rect *rect, const int count);
 
 	private:
+		SDL_Color _c;
     };
 } // namespace ow
 

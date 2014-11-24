@@ -7,8 +7,14 @@
 
 namespace ow
 {
+	void Primitives::color(SDL_Color c)
+	{
+		_c = c;
+	}
+
 	void Primitives::point(SDL_Renderer *r, const SDL_Point *p)
 	{
+		SDL_SetRenderDrawColor(r, _c.r, _c.g, _c.b, _c.a);
 		if (SDL_RenderDrawPoint(r, p->x, p->y) != 0) {
 			log_error(std::cout, "Primitives::point");
 		}
@@ -16,6 +22,7 @@ namespace ow
 
 	void Primitives::points(SDL_Renderer *r, const SDL_Point *p, const int count)
 	{
+		SDL_SetRenderDrawColor(r, _c.r, _c.g, _c.b, _c.a);
 		if (SDL_RenderDrawPoints(r, p, count) != 0) {
 			log_error(std::cout, "Primitives::points");
 		}
@@ -24,6 +31,7 @@ namespace ow
 	// draws line from points p1 to p2
 	void Primitives::line(SDL_Renderer *r, const SDL_Point *p1, const SDL_Point *p2)
 	{
+		SDL_SetRenderDrawColor(r, _c.r, _c.g, _c.b, _c.a);
 		if (SDL_RenderDrawLine(r, p1->x, p1->y, p2->x, p2->y) != 0) {
 			log_error(std::cout, "Primitives::line");
 		}
@@ -32,6 +40,7 @@ namespace ow
 	// draws a series of connected lines iteration over p[0...count]
 	void Primitives::lines_joined(SDL_Renderer *r, const SDL_Point *p, const int count)
 	{
+		SDL_SetRenderDrawColor(r, _c.r, _c.g, _c.b, _c.a);
 		if (SDL_RenderDrawLines(r, p, count) != 0) {
 			log_error(std::cout, "Primitives::lines_joined");
 		}
@@ -46,6 +55,7 @@ namespace ow
 		const SDL_Point *p2,
 		const int count)
 	{
+		SDL_SetRenderDrawColor(r, _c.r, _c.g, _c.b, _c.a);
 		for (int c = 0; c < count; c++) {
 			if (SDL_RenderDrawLine(r, p1[c].x, p1[c].y, p2[c].x, p2[c].y) != 0) {
 				log_error(std::cout, "Primitives::lines_disjoined");
@@ -55,6 +65,7 @@ namespace ow
 
 	void Primitives::rect(SDL_Renderer *r, const SDL_Rect *rect)
 	{
+		SDL_SetRenderDrawColor(r, _c.r, _c.g, _c.b, _c.a);
 		if (SDL_RenderDrawRect(r, rect) != 0) {
 			log_error(std::cout, "Primitives::rect");
 		}
@@ -62,6 +73,7 @@ namespace ow
 
 	void Primitives::rects(SDL_Renderer *r, const SDL_Rect *rect, const int count)
 	{
+		SDL_SetRenderDrawColor(r, _c.r, _c.g, _c.b, _c.a);
 		if (SDL_RenderDrawRects(r, rect, count) != 0) {
 			log_error(std::cout, "Primitives::rects");
 		}
@@ -69,6 +81,7 @@ namespace ow
 
 	void Primitives::fill_rect(SDL_Renderer *r, const SDL_Rect *rect)
 	{
+		SDL_SetRenderDrawColor(r, _c.r, _c.g, _c.b, _c.a);
 		if (SDL_RenderFillRect(r, rect) != 0) {
 			log_error(std::cout, "Primitives::fill_rect");
 		}
@@ -76,6 +89,7 @@ namespace ow
 
 	void Primitives::fill_rects(SDL_Renderer *r, const SDL_Rect *rect, const int count)
 	{
+		SDL_SetRenderDrawColor(r, _c.r, _c.g, _c.b, _c.a);
 		if (SDL_RenderFillRects(r, rect, count) != 0) {
 			log_error(std::cout, "Primitives::fill_rects");
 		}

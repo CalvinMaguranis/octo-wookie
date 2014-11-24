@@ -40,7 +40,8 @@ add_executable(${PROJECT_NAME}  main.cpp
                                 game.cpp 
                                 ow_texture.cpp
                                 #ow_text_stream.cpp
-                                ow_error.cpp)
+                                ow_error.cpp
+								primitives.cpp)
 
 target_link_libraries(${PROJECT_NAME}  ${SDL2_LIBRARY} 
                                        ${SDL2_IMAGE_LIBRARY}

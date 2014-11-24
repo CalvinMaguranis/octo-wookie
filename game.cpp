@@ -14,6 +14,7 @@
 
 #include "game.hpp"
 #include "ow_texture.hpp"
+#include "primitives.hpp"
 
 namespace ow
 {
@@ -39,12 +40,15 @@ namespace ow
 				all_quit();
 				return;
 			}
+			SDL_Color black = { 0, 0, 0, 0xff };
+			SDL_Color white = { 0xff, 0xff, 0xff, 0xff };
+			Primitives p(black);
 
 			ow_texture player_sprite(_r, "foo.png");			
 			ow_texture background(_r, "simpsons.png");
 			ow_texture doh(_r, "doh.png");
 			doh.blend_mode(SDL_BLENDMODE_BLEND);
-			ow_texture msg(_r, _f, "fuck font rendering!");
+			ow_texture msg(_r, _f, "woo font rendering!", white);
 
 			const int ms_per_frame = 1000 / max_fps;
 
@@ -58,6 +62,11 @@ namespace ow
 			int dt = 0, count = 0, f = 0;
 			ui8 alpha = 0;
 			si8 add = 4;
+			SDL_Rect rectangle = {
+				win_width / 4,
+				win_height / 4,
+				win_width / 2,
+				win_height / 2 };
 			
 			while (!q) {
 				const int start_t = SDL_GetTicks();
@@ -83,14 +92,16 @@ namespace ow
 				//DEBUG_PRINT("Frame: " << f << ", alpha: " << (int)alpha);
 
 				// render everything for time dt
+				SDL_SetRenderDrawColor(_r, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(_r);
 
 				background.render(_r, 0, 0, NULL);
+				p.fill_rect(_r, &rectangle);
 				doh.render(_r, (win_width - doh.width()),
 					(win_height - doh.height()), NULL);
 				player_sprite.render(_r,
 					s_x, s_y, &foo_frames[f]);
-				msg.render(_r, (win_width - msg.width()) / 2, (win_height - msg.width()) / 2);
+				msg.render(_r, (win_width - msg.width()) / 2, (win_height - msg.height()) / 2);
 				
 				SDL_RenderPresent(_r);
 				count++;
