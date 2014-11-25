@@ -1,7 +1,9 @@
 #ifndef __OW_PRIMITIVES_H
 #define __OW_PRIMITIVES_H
 
+#if defined(_WIN32) || defined(_WIN64)
 #pragma once
+#endif
 
 namespace ow
 {

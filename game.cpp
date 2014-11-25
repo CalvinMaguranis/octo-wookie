@@ -152,6 +152,15 @@ namespace ow
 			return false;
 		}
 
+		const int MIX_DEFAULT_CHUNK_SIZE = 2048;
+		if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY,
+			              MIX_DEFAULT_FORMAT,
+			              MIX_DEFAULT_CHANNELS,
+			              MIX_DEFAULT_CHUNK_SIZE) < 0) {
+			log_error(std::cout, "Mix_OpenAudio()");
+			return false;
+		}
+					  
 		_w = SDL_CreateWindow(label, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
 		if (_w == nullptr) {
 			log_error(std::cout, "SDL_CreateWindow()");
@@ -186,7 +195,15 @@ namespace ow
 			_w = NULL;
 		}
 
-		Mix_Quit();
+
+		while (Mix_Init(0)) {
+			/* From docs:
+			 *  NOTE: Since each call to Mix_Init may set different flags, there is no way,
+			 *  currently, to request how many times each one was initted. In other words, 
+			 *  the only way to quit for sure is to do a loop like so:
+			 */
+			Mix_Quit();
+		}
 		TTF_Quit();
 		IMG_Quit();
 		SDL_Quit();

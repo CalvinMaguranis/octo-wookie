@@ -1,7 +1,9 @@
 #ifndef __OW_ERROR_TOOLS_H
 #define __OW_ERROR_TOOLS_H
 
-#pragma once
+#if defined(_WIN32) || defined(_WIN64)
+	#pragma once
+#endif
 
 namespace ow
 {

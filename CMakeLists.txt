@@ -41,7 +41,8 @@ add_executable(${PROJECT_NAME}  main.cpp
                                 ow_texture.cpp
                                 #ow_text_stream.cpp
                                 ow_error.cpp
-								primitives.cpp)
+								primitives.cpp
+                                audio_chunk.cpp)
 
 target_link_libraries(${PROJECT_NAME}  ${SDL2_LIBRARY} 
                                        ${SDL2_IMAGE_LIBRARY}

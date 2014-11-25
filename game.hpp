@@ -1,7 +1,9 @@
 #ifndef __GAME_CLASS_H
 #define __GAME_CLASS_H
 
-#pragma once
+#if defined(_WIN32) || defined(_WIN64)
+	#pragma once
+#endif
 
 // SDL
 #include <SDL.h>

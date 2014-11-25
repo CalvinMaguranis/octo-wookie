@@ -2,7 +2,9 @@
 #ifndef __OW_TEXTURE_CLASS_H
 #define __OW_TEXTURE_CLASS_H
 
+#if defined(_WIN32) || defined(_WIN64)
 #pragma once
+#endif
 
 //#include "ow_types.hpp"
 
