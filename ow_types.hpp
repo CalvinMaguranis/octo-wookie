@@ -1,9 +1,7 @@
 #ifndef __OW_TYPES_H
 #define __OW_TYPES_H
 
-#if defined(_WIN32) || defined(_WIN64)
 #pragma once
-#endif
 
 #include <stdint.h>
 namespace ow

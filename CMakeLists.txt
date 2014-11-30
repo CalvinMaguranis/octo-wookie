@@ -42,6 +42,7 @@ add_executable(${PROJECT_NAME}  main.cpp
                                 #ow_text_stream.cpp
                                 ow_error.cpp
 								primitives.cpp
+								audio_music.cpp
                                 audio_chunk.cpp)
 
 target_link_libraries(${PROJECT_NAME}  ${SDL2_LIBRARY} 
