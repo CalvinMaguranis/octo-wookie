@@ -1,5 +1,5 @@
 # octo-wookie
-Learning experiments with SDL2, resulting features are mostly (~95%) due to tutorials from [lazyfoo](lazyfoo.net) and [willusher](willusher.io). Thank you guys!
+Learning experiments with SDL2, resulting features are mostly (~95%) due to tutorials from [lazyfoo](www.lazyfoo.net) and [willusher](www.willusher.io). Thank you guys!
 
 ## Features
  * dt time stepping
